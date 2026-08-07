@@ -19,35 +19,42 @@ app = FastAPI(
     title="Niyati Clinic Appointment System"
 )
 
-
-# CORS Settings
+# -----------------------------
+# CORS
+# -----------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:5174",
+        "http://localhost:5175",
 
-        # Deployment ke baad yahan frontend URL add karna
-        # "https://your-frontend-url.onrender.com"
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+        "http://127.0.0.1:5175",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-# Create database tables
+# -----------------------------
+# Create Tables
+# -----------------------------
 Base.metadata.create_all(bind=engine)
 
-
-# API Routers
+# -----------------------------
+# Routers
+# -----------------------------
 app.include_router(auth_router)
 app.include_router(doctor_router)
 app.include_router(patient_router)
 app.include_router(appointment_router)
 app.include_router(dashboard_router)
 
-
+# -----------------------------
+# Health Check
+# -----------------------------
 @app.get("/health")
 def health():
     return {
@@ -65,7 +72,7 @@ def ping():
     }
 
 
-@app.post("/api/version")
+@app.get("/api/version")
 def version():
     return {
         "version": "production-v1",
